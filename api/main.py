@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 
 
-import _yf
+import yf
 from tickers import Tickers
 from time import time
 from json import dumps
@@ -30,7 +30,7 @@ def analyze(t:str,w:str,edge:float):
 	weights = w.split(",")
 	for index,ticker in enumerate(t.split(",")):
 		portfolio[ticker]=float(weights[index])
-	response = _yf.analyze(portfolio,edge)
+	response = yf.analyze(portfolio,edge)
 	return response
 
 # EX: search?ticker=btc
@@ -39,8 +39,8 @@ def search(pattern:str):
 	try:
 		return tickers.find(pattern)
 	except:
-		return [] 
-	 
+		return []
+
 
 # EX: info?ticker=btc-usd
 @app.get("/tickers/{ticker}")
