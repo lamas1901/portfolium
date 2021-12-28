@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% block title %}
+Мои портфолио
+{% endblock %}
+{% block content %}
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Список портфолио</h1>
+        <div class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm blocked" data-el="portfoliosCsv"><i
+                class="fas fa-download fa-sm text-white-50"></i> Вывести CSV</div>
+    </div>
+    <div class="card shadow mb-4" data-el="portfolios">
+        <!-- Card Header - Dropdown -->
+        <!-- Card Body -->
+        <div class="card-body">
+            <div data-state="default">
+                <div class="d-flex justify-content-end align-items-center mb-3">
+                    <div>
+                        <a href="{{url_for('new_portfolio')}}" class="btn btn-success btn-icon-split" data-el="portfolios.addButton">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-plus"></i>
+                            </span>
+                            <span class="text">Добавить</span>
+                        </a>
+                        <div class="btn btn-info btn-icon-split" data-el="portfolios.editButton">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-none mt-4" data-el="portfolios.nothing">
+                <div data-state="default">
+                    <h4>Нажмите "Добавить", что бы создать новое портфолио</h4>
+                    <p class="mt-3">Или же, можно</p>
+                    <span class="btn btn-secondary btn-icon-split">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-book"></i>
+                        </span>
+                        <span class="text blocked">Пройти обучение</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="table-responsive pb-3" data-el="portfolios.exist">
+                <table width="100%" cellspacing="0" data-el="portfolios.table">
+                    <thead data-state="default">
+                        <tr>
+                            <th class="pb-2 pr-5">Номер/Название</th>
+                            <th class="pr-5">Кол-во инструментов</th>
+                            <th class="pr-5">Вложенные средства</th>
+                            <th>Волатильность</th>
+                            <th class="text-right">Доход/мес</th>
+                        </tr>
+                    </thead>
+                    <thead data-state="edit" class="d-none">
+                        <tr>
+                            <th class="pb-2">Номер/Название</th>
+                            <th class="text-right">Перемещение/ Удаление</th>
+                        </tr>
+                    </thead>
+                    <tfoot data-state="default">
+                        <tr>
+                            <th class="pr-5">Номер/Название</th>
+                            <th class="pr-5">Кол-во инструментов</th>
+                            <th class="pr-5">Вложенные средства</th>
+                            <th>Волатильность</th>
+                            <th class="text-right">Доход/мес</th>
+                        </tr>
+                    </tfoot>
+                    <tfoot data-state="edit" class="d-none">
+                        <tr>
+                            <th >Номер/Название</th>
+                            <th class="text-right">Перемещение/ Удаление</th>
+                        </tr>
+                    </tfoot>
+                    <tbody data-el="table.body">
+                        {% for portfolio in current_user.portfolios|sort(attribute='number') %}
+                            <tr class="add-bar-item bg-gray-100" data-el="portfolios.portfolio">
+                                <td class="add-bar-item__cell">
+                                    <span class="asset__name ml-3" data-el="portfolio.number">{{portfolio.number}}</span>.
+                                    <a href="{{url_for('portfolio',id=portfolio.id)}}" class="p-3">
+                                        <span data-state="default" data-el="portfolio.outName">
+                                            {{portfolio.name}}
+                                        </span>
+                                        <span class="d-none" data-el="portfolio.numberFactory">{{portfolio.id}}</span>
+                                    </a>
+                                    <input value="{{portfolio.name}}" class="bg-white add-input w-50 d-none" data-el="portfolio.inName" data-state="edit">
+                                </td>
+
+                                <td data-state="default">
+                                    <div class="mr-2">{{ portfolio.data_current|length }}</div> 
+                                </td>
+                                
+                                <td data-state="default">
+                                    {{ portfolio.data_current|sum(attribute="price") }}$          
+                                </td>
+
+                                <td class="pr-4" data-state="default">
+                                    {{ (portfolio.data_optimized["current"]["volatility"]*100)|round(2) }}%
+                                </td>
+
+                                <td class="pr-4 text-right" data-state="default">
+                                    {{ (portfolio.data_optimized["current"]["return"]*100)|round(2) }}%
+                                </td>
+                                <td data-state="edit" class="d-none">
+                                    <div class="d-flex justify-content-end align-items-center">
+                                        <span class="mr-3 d-flex">
+                                            <i class="fas fa-arrow-up cursor-pointer add-appear ml-2" data-el="portfolio.moveUp"></i>
+                                            <i class="fas fa-arrow-down cursor-pointer add-appear ml-2" data-el="portfolio.moveDown"></i>
+                                        </span>
+                                        <div class="btn btn-danger float-right mr-4" data-el="portfolio.deleteButton" data-toggle="modal">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div data-el="assets.container">
+                
+                <!-- [ Add bonds there ] -->
+
+            </div>
+            <div class="pt-3 d-none" data-state="edit">
+                <div class="d-none" data-el="assets.alert">
+                    <div class="add-alert">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span data-el="portfolios.alertMessage">Пожалуйста используйте веса на 100%</span>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end flex-wrap" data-el="assets.editButtons">
+                    <div data-toggle="modal" data-target="#deleteModal" class="btn btn-success btn-icon-split float-right ml-2 mt-2" data-el="assets.editButtons.save">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <span class="text" data-el="portfolios.saveButton">Сохранить изменения</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            class="card p-3 d-flex flex-row align-items-center justify-content-between bg-gray-100">
+            <h6 class="m-0 text-gray-600" data-el="portfolios.exist">
+                Использовано слотов 
+                <span class="font-weight-bold">
+                    <span data-el="portfolios.used"></span> / 10
+                </span>
+            </h6>
+            <div data-state="edit" class="d-none cursor-pointer" data-el="portfolios.factoryButton">   
+                <i class="fas fa-industry text-gray-400"></i> 
+            </div>
+        </div>
+    </div>
+    <!-- Content Row -->
+{% endblock %}
+{% block modals %}
+<!-- Delete modal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    Вы точно хотите сохранить изменения вместе с удалёнными портфолио ?
+                    <input id="saveChangesInput" placeholder="ПОДТВЕРДИТЬ" type="text" class="mt-2 add-input input">
+                </h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
+                <div class="btn btn-danger" data-el="buttonSaveChanges" id="saveChanges" data-dismiss="modal" aria-label="Close">Сохранить</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+<script type="module" src="{{ url_for('static',filename='js/min/portfolios.js') }}"></script>
+{% endblock %}

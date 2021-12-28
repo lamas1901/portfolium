@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% block title %}Новое портфолио{% endblock %}
+{% block content %}
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <span class="d-flex">
+            <input class="input add-input" type="text" id="portfolioName" placeholder="Название портфолио"> 
+            <!-- <h1 class="h3 mb-0 text-gray-800">Главное - N'<span id="portfolioNumber">1</span></h1> -->
+        </span>
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm blocked"><i
+                class="fas fa-download fa-sm text-white-50"></i> Вывести отчёт</a>
+    </div>
+    <div class="mb-4">
+        <div class="btn btn-info btn-icon-split" data-el="buttonUpdate">
+            <span class="icon text-white-50">
+                <i class="fas fa-save"></i>
+            </span>
+            <span class="text">
+                Сохранить
+            </span>
+        </div>
+    </div>
+
+
+    <div class="row">
+        
+        <div class="col-lg-6">
+            <div class="card shadow mb-4" data-el="assets">
+                <!-- Card Header - Dropdown -->
+                <div
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Инструменты <b>(<span data-el="assets.number">0</span>/10)</b></h6>
+                    <div data-state="default">   
+                        <div class="dropdown no-arrow">
+                            <span class="dropdown-toggle cursor-pointer--attention-on-hover" href="#" role="button" id="dropdownMenuLink"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                            </span>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                aria-labelledby="dropdownMenuLink">
+                                <div class="dropdown-header">Портфолио:</div>
+                                <div data-el="assets.dCSV" class="dropdown-item">Вывести в CSV</div>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-item add-lighted cursor-pointer" id="assetsEdit" data-el="assets.editButton">Внести изменения</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div title="Вернуть всё как до редактирования" data-state="edit" class="d-none cursor-pointer cursor-pointer--attention-on-hover" data-el="assets.factoryButton">   
+                        <i class="fas fa-industry text-gray-400"></i> 
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="mb-3" data-state="default">
+                        <div class="d-none" data-el="assets.sortOptions">
+                            <label class="d-flex flex-wrap align-items-center">
+                                <span class="mr-3 mb-2">Сортировать</span>
+                                <select class="custom-select custom-select-sm form-control form-control-sm cursor-pointer w-auto">
+                                    <option value="default">Порядковый номер</option>
+                                    <option value="name">Название</option>
+                                    <option value="price">Цена</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="d-none" data-state="edit">
+                        <form
+                            class="d-sm-inline-block mr-auto mb-4" data-el="assets.searchBar">
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-light border-0 small add-input" placeholder="Тикер..."
+                                    aria-label="Search" aria-describedby="basic-addon2" list="takenTickers" data-el="searchBar.input">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary d-none" type="button" data-el="searchBar.selectButton">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <datalist id="takenTickers" data-el="searchBar.results">
+                                </datalist>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="mb-4 d-none" data-state="edit">
+                        <div class="d-flex justify-content-between flex-wrap">
+                            <label class="d-flex align-items-center mr-4" data-el="assets.parametrs">
+                                <span data-el="assets.parametrs.intro">Действие</span>
+                                <select class="custom-select custom-select-sm form-control form-control-sm ml-3 cursor-pointer w-auto" data-el="assets.applyOptions">
+                                    <option value="delete">Удалить</option>
+                                    <option value="eqVal">Сравнять средства</option>
+                                    <option value="zeroVal">Обнулить средства</option>
+                                </select>
+                            </label> 
+                            <label class="my-2 mr-4">
+                                <span>Выбрать все</span>
+                                <input class="add-checkbox align-middle" type="checkbox" data-el="assets.selectAllCheckbox" data-state="edit">
+                            </label>
+                            
+                        </div>
+                    </div>
+                    <div class="table-responsive pb-2">
+
+                        <div data-el="assets.intro">
+                            <h4>Здесь пока нет инструментов</h4>
+                            <div data-state="default"> 
+                                <p>Что бы добавить нажмите</p>
+                                <div data-el="assets.editButton" class="btn btn-info btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-edit"></i>
+                                    </span>
+                                    <span class="text">Редактировать инструменты</span>
+                                </div>
+                                <p class="mt-3">Или же, можно</p>
+                                <span class="btn btn-secondary btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-book"></i>
+                                    </span>
+                                    <span class="text">Пройти обучение</span>
+                                </span>
+
+                            </div>
+                        </div>
+                       <table data-el="assets.container" width="100%" cellspacing="0">
+                            <thead class="d-none">
+                                <tr>
+                                    <th class="pb-2">Инструмент</th>
+                                    <th class="text-right">Сумма($)</th>
+                                </tr>
+                            </thead>
+                            <tfoot class="d-none">
+                                <tr>
+                                    <th class="pt-2">Инструмент</th>
+                                    <th class="text-right">Сумма($)</th>
+                                </tr>
+                            </tfoot>
+                            <tbody data-el="container.body">
+
+                               <!-- [Assets'll be there] -->
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pt-3 pd-3 d-none" data-state="edit">
+                        <div class="d-none" data-el="assets.alert">
+                            <div class="add-alert">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span data-el="assets.alertMessage"></span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end flex-wrap" data-el="assets.editButtons">
+                            <div class="btn btn-info btn-icon-split mt-2" data-el="assets.applyButton">
+                                <span class="text">Применить действие</span>
+                            </div>
+                            <div class="btn btn-success btn-icon-split float-right ml-2 mt-2" data-el="assets.saveButton">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                                <span class="text">Сохранить изменения</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="d-block mt-3">Всего активов на сумму : <b data-el="assets.sum">0</b>$</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow mb-4" data-el="optimize">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Оптимизация</h6>
+                    <span data-el="optimize.last"></span>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    
+                    <div class="d-none" data-state="nothing">
+                        <h4 class='text-center'>
+                            <br>
+                            <!-- <i class="fas fa-flag-checkered"></i> -->
+                            <i class="fas fa-money-bill-alt"></i>
+                            <br>
+                            <br>
+                            Вы пока не оптимизировали портфолио...
+                            <br>
+                            <br>
+                            <p></p>
+                        </h4>
+                    </div>
+                    <div data-state="default" class="mb-4 d-none">
+                        <p class="font-weight-bold">
+                            Ваше портфолио имеет:
+                        </p>
+                        <table id="dataTable" width="100%" cellspacing="0" class="mb-5">
+                            <tbody>
+                                
+                                <!-- [ Add table row here ] -->
+                                <tr>
+                                    <td>
+                                        <span class="font-weight-bold">Волатильность</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span data-el="optimize.currentVolatility">1</span>%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="font-weight-bold">Ожидаемый доход</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span data-el="optimize.currentReturn">1</span>%
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                        <p class="font-weight-bold">
+                            Оптимизированный вариант:
+                        </p>
+                        <div class="table-responsive">
+                            <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0" data-el="optimize.table" weights>
+                                <thead>
+                                    <tr>
+                                        <th>Тикер</th>
+                                        <th>Оптимальный вес</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Тикер</th>
+                                        <th>Оптимальный вес</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody data-el="table.body">
+
+                                    <tr data-el="undefined">
+                                        <td>BTC-USD</td>
+                                        <td>0.19</td>
+                                    </tr>
+                                    <tr data-el="undefined">
+                                        <td>GOOG</td>
+                                        <td>0.8</td>
+                                    </tr>
+                                    <!-- [ Add table row here ] -->
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <table id="dataTable" width="100%" cellspacing="0">
+                            <tbody>
+                                
+                                <!-- [ Add table row here ] -->
+                                <tr>
+                                    <td>
+                                        <span class="font-weight-bold">Волатильность</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span data-el="optimize.optimizedVolatility">1</span>%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="font-weight-bold">Ожидаемый доход</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span data-el="optimize.optimizedReturn">1</span>%
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <span>
+                            Порог весов (мин):
+                        </span>
+                        <input type="number" max="0.1" min="0.01" value="0.01" placeholder="мин. вес" class="add-input d-block w-25 mb-2 p-1" data-el="optimize.edge">
+                    </div>
+                    <div class="d-none mb-2" data-el="optimize.alert">
+                        <div class="add-alert">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span data-el="optimize.alertMessage"></span>
+                        </div>
+                    </div>
+                    <div class="btn btn-warning btn-icon-split" data-el="optimize.optimizeButton">
+                        <span class="icon text-white-50">
+                            <i data-el="optimizeButton.iconDefault" class="fas fa-hourglass-start add-wait-animate d-none"></i>
+                            <i data-el="optimizeButton.iconLoading" class="fas fa-tachometer-alt"></i>
+                        </span>
+                        <span data-el="optimizeButton.textDefault" class="text">Оптимизировать Портфолио</span>
+                        <span data-el="optimizeButton.textLoading" class="text d-none">Ожидание ответа...</span>
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+
+
+    </div>
+
+    <!-- Content Row -->
+    
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static',filename='/js/min/port-templates.js') }}"></script>
+<script type="module" src="{{ url_for('static',filename='/js/process/new-port.js') }}"></script>
+{% endblock %}

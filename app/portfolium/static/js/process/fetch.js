@@ -1,0 +1,1 @@
+export const TO_FETCH ="http://192.168.88.245:8000";

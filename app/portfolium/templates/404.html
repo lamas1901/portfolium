@@ -1,0 +1,17 @@
+{% extends "base-float.html" %}
+{% block title %}Страница не найдена{% endblock %}
+{% block content %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- 404 Error Text -->
+    <div class="text-center mt-5">
+        <div class="error mx-auto" data-text="404">404</div>
+        <p class="lead text-white mb-5">Данной страницы либо нет либо она была удалена</p>
+        <p class="text-gray-500 mb-0">...</p>
+        <a class="text-light" href="{{ url_for('index') }}">&larr; Назад</a>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+{% endblock %}

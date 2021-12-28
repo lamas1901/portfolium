@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}Новое портфолио{% endblock %}
+{% block content %}
+<div class="card p-2">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category,message in messages %}
+                <div class="alert alert-{{category}}">
+                    {{message}}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form method="post" action="?f=login">
+        {{ login_form.hidden_tag() }}
+        <h3 class="m-2">Данные аккаунта</h3>
+        <div>
+            <div>
+                <p class="m-2">Почта:</p>
+                <b class="m-2">{{current_user.email}}</b>
+            </div>
+            <div>
+                <p class="m-2">Псевдоним:</p>
+                {% if login_form.username.errors %}
+                    {{ login_form.username(class="d-block add-input m-2 is-invalid",value=current_user.username) }}
+                    <div class="invalid-feedback m-2">
+                        {% for error in login_form.username.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ login_form.username(class="d-block add-input m-2",value=current_user.username) }}
+                {% endif %}
+                <!-- <input type="text" value="{{current_user.username}}" class="d-block add-input m-2" name="username"> -->
+            </div>
+        </div>
+        {{ login_form.submit(class="btn btn-primary m-2") }}
+        <hr>
+    </form>
+    <form method="post" action="?f=password">
+        {{ password_form.hidden_tag() }}
+        <div>
+            <p class="m-2">Смена пароля:</p>
+            <div class="d-flex align-items-start flex-wrap">
+                {% if password_form.old_password.errors %}
+                    {{ password_form.old_password(class="add-input m-2 is-invalid") }}
+                    <div class="invalid-feedback m-2">
+                        {% for error in password_form.old_password.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ password_form.old_password(class="d-block add-input m-2") }}
+                {% endif %}
+                <div>
+                    {% if password_form.new_password.errors %}
+                        {{ password_form.new_password(class="add-input m-2 is-invalid") }}
+                        <div class="invalid-feedback m-2">
+                            {% for error in password_form.new_password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ password_form.new_password(class="d-block add-input m-2") }}
+                    {% endif %}
+                    {% if password_form.confirm_new_password.errors %}
+                        {{ password_form.confirm_new_password(class="add-input m-2 is-invalid") }}
+                        <div class="invalid-feedback m-2">
+                            {% for error in password_form.confirm_new_password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ password_form.confirm_new_password(class="d-block add-input m-2") }}
+                    {% endif %}
+                </div>
+            </div>
+            {{ password_form.submit(class="btn btn-primary m-2") }}
+            <br>
+            <a href="{{url_for('forgot_password')}}" class="m-2">Забыл пароль?</a>
+        </div>
+    </form>
+    <div>
+        <hr>
+        <h3 class="m-2">Состояние аккаунта</h3>
+        <div>
+            <p class="m-2">Использовано портфолио:</p>
+            <h2><strong class="m-2">{{current_user.portfolios|length}}/10</strong></h2>
+        </div>
+        <p class="m-2">Срок действия премиум подписки <i 
+            title="
+Подписка позволяет вам хранить 
+больше портфолио на сервисе и 
+максимально диверсифицировать 
+инструменты" class="fas fa-info-circle text-gray-400"></i></p>
+        <h2>
+            <strong class="m-2">Скоро</strong>
+            <div class="btn btn-info m-2 blocked">Обновить подписку</div>
+        </h2>
+    </div>
+
+</div>
+{% endblock %}

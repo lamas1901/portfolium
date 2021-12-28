@@ -1,0 +1,81 @@
+{% extends "base-float.html" %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-10 col-lg-12 col-md-9">
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-6 d-none d-lg-block add-bg-login-image"></div>
+                    <div class="col-lg-6">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="d-flex justify-content-center mb-4">
+                                    <div class="rotate-n-15">
+                                    </div>
+                                    <i class="fab fa-pushed"></i>
+                                    <div class="mx-3">Portfolium</div>
+                                </h1>
+                            </div>
+                            <form class="user" method="POST">
+                                {{ form.hidden_tag() }}
+                                {% with messages = get_flashed_messages(with_categories=true) %}
+                                    {% if messages %}
+                                        {% for category,message in messages %}
+                                            <div class="alert alert-{{category}}">
+                                                {{message}}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                                <div class="form-group">
+                                    {% if form.email.errors %}
+                                        {{ form.email(class="form-control form-control-user is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.email.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.email(class="form-control form-control-user") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    {% if form.password.errors %}
+                                        {{ form.password(class="form-control form-control-user is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.password.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.password(class="form-control form-control-user") }}
+                                    {% endif %}
+                                <div class="form-group mt-2">
+                                    <div class="custom-control custom-checkbox small">
+                                        {{ form.remember(class="custom-control-input") }}
+                                        {{ form.remember.label(class="custom-control-label") }}
+                                    </div>
+                                </div>
+                                {{ form.submit(class="btn btn-primary btn-user btn-block ") }}
+
+                                <!-- <a href="index.html" class="btn btn-google btn-user btn-block">
+                                    <i class="fab fa-google fa-fw"></i> Войти с помощью Google
+                                </a> -->
+                            </form>
+                            <div class="text-center">
+                                <a class="small" href="{{ url_for('register') }}">Ещё нет аккаунта?</a>
+                            </div>
+                            <div class="text-center">
+                                <a class="small" href="{{ url_for('forgot_password') }}">Забыл пароль?</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
