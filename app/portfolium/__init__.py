@@ -10,6 +10,8 @@ from portfolium.mail import mail_settings
 CONFIG = ConfigParser()
 CONFIG.read('config.ini')
 
+HOST = f"http://{CONFIG['FLASK']['external_ip']}/"
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = CONFIG["FLASK"]["secret_key"]
 

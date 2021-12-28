@@ -7,7 +7,7 @@ import bcrypt
 import secrets
 import json
 
-from portfolium import app, db, mail
+from portfolium import app, db, mail, HOST
 from portfolium.forms import RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, ChangePassword, ChangeLogin
 from portfolium.models import User, Portfolio, ConfirmRequest, ResetPasswordRequest
 
@@ -124,7 +124,7 @@ def register():
 			sender=app.config.get("MAIL_USERNAME"),
 			recipients=[form.email.data],
 			subject="Portfolium",
-			html=render_template("mail/confirm.html",data=confirm_request,url=request.url_root))
+			html=render_template("mail/confirm.html",data=confirm_request,url=HOST))
 		mail.send(msg)
 		db.session.commit()
 		flash("Вам на почту отправлено письмо с ссылкой на подтверждение аккаунта","success")
@@ -190,7 +190,7 @@ def forgot_password():
 			sender=app.config.get("MAIL_USERNAME"),
 			recipients=[form.email.data],
 			subject="Portfolium",
-			html=render_template("mail/reset_password.html",data=reset_password_request,url=request.url_root))
+			html=render_template("mail/reset_password.html",data=reset_password_request,url=HOST))
 		mail.send(msg)
 		flash(f"На почту ({form.email.data}) отправлено письмо с нужной ссылкой","success")
 	return render_template("forgot-password.html",form=form)
