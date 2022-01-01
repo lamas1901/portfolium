@@ -27,13 +27,17 @@ def get_brief(tickers):
 	data = []
 
 	for ticker in tickers:
-		data.append(
-			yf.download(
-				ticker,
-				interval="1d",
-				progress=False
-			)["Close"]
-		)
+		ticker_data = yf.download(
+			ticker,
+			interval="1d",
+			progress=False
+		)["Close"]
+		if ticker_data.shape[0]>0:
+			data.append(
+				ticker_data
+			)
+		else:
+			tickers.remove(ticker)
 	data = pd.concat(data,axis=1).dropna()
 	date_from = data.index[0].timestamp()
 	data.columns = tickers
@@ -46,7 +50,8 @@ def get_brief(tickers):
 	return {
 		"meanLogRet":meanLogRet,
 		"sigma":sigma,
-		"from": date_from
+		"from": date_from,
+		"tickers" : tickers
 	}
 
 def get_expectations(portfolio,brief):
@@ -105,10 +110,14 @@ def optimize(tickers,edge):
 
 def analyze(portfolio,edge=0.01):
 	tickers = [ticker for ticker in portfolio]
+	brief = get_brief(tickers)
+	for ticker in portfolio:
+		if not (ticker in brief["tickers"]):
+			del portfolio[ticker]
 	return {
 		"current":get_expectations(
 			portfolio,
-			get_brief(tickers)
+			brief
 		),
 		"optimized":optimize(tickers,edge)
 	}

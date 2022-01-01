@@ -174,11 +174,8 @@
 в каком временном промежутке 
 происходила оптимизация" class="fas fa-info-circle text-gray-400"></i>
                         <span data-el="optimize.from">
-                            {% if portfolio.data_optimized["current"].get("from") %}
-                                {{ portfolio.data_optimized["current"].get("from")|ctime}}
-                            {% endif %}
                         </span><br>
-                        <span data-el="optimize.last">{{ portfolio.optimize_timestamp|ctime}}</span>
+                        <span data-el="optimize.last"></span>
                     </div>
                 </div>
                 <!-- Card Body -->
