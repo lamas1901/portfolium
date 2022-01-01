@@ -203,7 +203,19 @@
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Оптимизация</h6>
-                    <span data-el="optimize.last">{{ portfolio.optimize_timestamp|ctime }}</span>
+                    <div class="text-right">
+                        <i 
+            title="
+Данный указатель показывает 
+в каком временном промежутке 
+происходила оптимизация" class="fas fa-info-circle text-gray-400"></i>
+                        <span data-el="optimize.from">
+                            {% if portfolio.data_optimized["current"].get("from") %}
+                                {{ portfolio.data_optimized["current"].get("from")|ctime}}
+                            {% endif %}
+                        </span><br>
+                        <span data-el="optimize.last">{{ portfolio.optimize_timestamp|ctime}}</span>
+                    </div>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
@@ -234,7 +246,7 @@
                                         <span class="font-weight-bold">Волатильность</span>
                                     </td>
                                     <td class="text-right">
-                                        <span data-el="optimize.currentVolatility">{{(portfolio.data_optimized["current"]["volatility"]*100)|round(2)}}</span>%
+                                        <span data-el="optimize.currentVolatility">{{(portfolio.data_optimized["current"].get("volatility")*100)|round(2)}}</span>%
                                     </td>
                                 </tr>
                                 <tr>
@@ -242,7 +254,7 @@
                                         <span class="font-weight-bold">Ожидаемый доход</span>
                                     </td>
                                     <td class="text-right">
-                                        <span data-el="optimize.currentReturn">{{(portfolio.data_optimized["current"]["return"]*100)|round(2)}}</span>%
+                                        <span data-el="optimize.currentReturn">{{(portfolio.data_optimized["current"].get("return")*100)|round(2)}}</span>%
                                     </td>
                                 </tr>
 
@@ -288,7 +300,7 @@
                                         <span class="font-weight-bold">Волатильность</span>
                                     </td>
                                     <td class="text-right">
-                                        <span data-el="optimize.optimizedVolatility">{{(portfolio.data_optimized["optimized"]["volatility"]*100)|round(2)}}</span>%
+                                        <span data-el="optimize.optimizedVolatility">{{(portfolio.data_optimized["optimized"].get("volatility")*100)|round(2)}}</span>%
                                     </td>
                                 </tr>
                                 <tr>
@@ -296,7 +308,7 @@
                                         <span class="font-weight-bold">Ожидаемый доход</span>
                                     </td>
                                     <td class="text-right">
-                                        <span data-el="optimize.optimizedReturn">{{(portfolio.data_optimized["optimized"]["return"]*100)|round(2)}}</span>%
+                                        <span data-el="optimize.optimizedReturn">{{(portfolio.data_optimized["optimized"].get("return")*100)|round(2)}}</span>%
                                     </td>
                                 </tr>
 

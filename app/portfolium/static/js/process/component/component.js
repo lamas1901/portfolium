@@ -452,6 +452,7 @@ class SearchBar extends StaticComponent{
 				this.input.clear()
 				this.results.clear()
 			})
+			this.selectButton.self.classList.add("d-none")
 		}
 	}
 }
@@ -556,7 +557,6 @@ class InputResults extends Edge{
 		resultList = Object.entries(resultList)
 		.filter((result)=>{
 			return !this.root.container.exist(result[0])
-			&& (result[0].toLowerCase().startsWith(this.input.value))
 		})
 		this.resultList = Object.entries(resultList)
 		resultList.forEach((result)=>{
@@ -650,7 +650,6 @@ class Checkbox extends Edge{
 }
 
 // === [ Layer 5 ] === //
-
 
 class PseudoTable extends StaticTable{
 

@@ -710,7 +710,8 @@ class Optimize extends StaticComponent {
 	display(result) {
 		this.preset = result
 		this.preset.edge = Number(this.edge)
-		this.get("last").innerHTML = new Date().toLocaleDateString() 
+		this.get("last").innerHTML = new Date().toLocaleDateString()
+		this.get("from").innerHTML = new Date(1092873600* 1e3).toLocaleDateString()
 		this.table.clear()
 		for (let weight in result.optimized.weights){
 			this.table.add(

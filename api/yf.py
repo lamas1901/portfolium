@@ -30,12 +30,12 @@ def get_brief(tickers):
 		data.append(
 			yf.download(
 				ticker,
-				start,
 				interval="1d",
 				progress=False
 			)["Close"]
 		)
-	data = pd.concat(data,axis=1)
+	data = pd.concat(data,axis=1).dropna()
+	date_from = data.index[0].timestamp()
 	data.columns = tickers
 
 	logReturns = np.log(data/data.shift(1))
@@ -45,7 +45,8 @@ def get_brief(tickers):
 
 	return {
 		"meanLogRet":meanLogRet,
-		"sigma":sigma
+		"sigma":sigma,
+		"from": date_from
 	}
 
 def get_expectations(portfolio,brief):
@@ -56,7 +57,8 @@ def get_expectations(portfolio,brief):
 	expectedVolatility = np.sqrt(np.dot(w.T,np.dot(brief["sigma"],w)))
 	return {
 		"volatility":round(expectedVolatility,4),
-		"return":round(expectedReturn*100,4)
+		"return":round(expectedReturn*100,4),
+		"from":brief["from"]
 	}
 
 def optimize(tickers,edge):
@@ -114,8 +116,8 @@ def analyze(portfolio,edge=0.01):
 if __name__ == "__main__":
 
 	portfolio = {
-		"btc-usd":0.9,
-		"btc-r.bk":0.1
+		"googl":0.9,
+		"aapl":0.1
 	}
 
 	print(analyze(portfolio))

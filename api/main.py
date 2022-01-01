@@ -10,7 +10,7 @@ from time import time
 from json import dumps
 
 app = FastAPI()
-tickers = Tickers("tickers.csv")
+tickers = Tickers("test.csv")
 
 
 app.add_middleware(
