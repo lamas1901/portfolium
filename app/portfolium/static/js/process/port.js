@@ -661,6 +661,12 @@ class Optimize extends StaticComponent {
 					this.state.ready = true
 					this.INTERFACE.lead.state.ready = true
 					this.INTERFACE.check()
+				}).catch(err=>{
+					this.optimizeButton.blocked = false;
+					this.optimizeButton.getAll().forEach((element)=>{
+						element.classList.toggle("d-none")
+					})
+					this.alert = "Не удалось оптимизировать портфолио"
 				});
 			} else {
 				this.alert = "Для того что бы оптимизировать портфолио в нём должно быть минимум 2 инструмента..."
