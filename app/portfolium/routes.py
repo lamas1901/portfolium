@@ -71,7 +71,7 @@ def new_portfolio():
         ))
 		db.session.commit()
 		return str(Portfolio.query.filter_by(owner_id=current_user.id,number=number).first().id)
-	return render_template("nportfolio.html")
+	return render_template("portfolio.html",portfolio=False)
 
 @app.route("/account",methods=["GET","POST"])
 @login_required
@@ -217,3 +217,7 @@ def new_password(id,hash):
 @app.errorhandler(404)
 def page_not_found(e):
 	return render_template("404.html"),404
+
+@app.context_processor
+def inject_debug():
+    return dict(debug=app.debug)

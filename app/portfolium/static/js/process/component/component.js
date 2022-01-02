@@ -297,8 +297,9 @@ class StaticTable extends StaticComponent{
 	}
 	
 	render(){
+		console.log(this.body.subscribers.length)
 		this.heads.forEach((head)=>{
-			if(head.dataset.state===this.root.state.mode){
+			if(head.dataset.state===this.root.state.mode&&this.body.subscribers.length>0){
 				head.classList[
 					this.body.subscribers.length?"remove":"add"
 				]("d-none")

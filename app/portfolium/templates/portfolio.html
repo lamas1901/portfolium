@@ -1,13 +1,25 @@
 {% extends 'base.html' %}
-{% block title %}Название портфолио{% endblock %}
+
+{% block title %}
+    {% if portfolio %}
+        {{portfolio.name}}
+    {% else %}
+        Новое портфолио
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <span class="d-flex">
-            <h1 class="h3 mb-0 text-gray-800">{{portfolio.name}} - N'<span id="portfolioNumber">{{portfolio.number}}</span></h1>
+            {% if portfolio %}
+                <h1 class="h3 mb-0 text-gray-800">{{portfolio.name}} - N'<span id="portfolioNumber">{{portfolio.number}}</span></h1>
+            {% else %}
+                 <input class="input add-input" type="text" id="portfolioName" placeholder="Название портфолио"> 
+            {% endif %}
         </span>
         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm blocked"><i
-                class="fas fa-download fa-sm text-white-50"></i> Вывести отчёт</a>
+                class="fas fa-download fa-sm text-white-50"></i>Вывести отчёт</a>
     </div>
     <div class="mb-4">
         <div class="btn btn-info btn-icon-split" data-el="buttonUpdate">
@@ -38,7 +50,7 @@
                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                 aria-labelledby="dropdownMenuLink">
                                 <div class="dropdown-header">Портфолио:</div>
-                                <div data-el="assets.dCSV" class="dropdown-item">Вывести в CSV</div>
+                                <div data-el="assets.dCSV" class="dropdown-item d-none">Вывести в CSV</div>
                                 <div class="dropdown-divider"></div>
                                 <div class="dropdown-item add-lighted cursor-pointer" id="assetsEdit" data-el="assets.editButton">Внести изменения</div>
                             </div>
@@ -51,7 +63,7 @@
                 <!-- Card Body -->
                 <div class="card-body">
                     <div class="mb-3" data-state="default">
-                        <div data-el="assets.sortOptions">
+                        <div {% if not portfolio %} d-none {% endif %} data-el="assets.sortOptions">
                             <label class="d-flex flex-wrap align-items-center">
                                 <span class="mr-3 mb-2">Сортировать</span>
                                 <select class="custom-select custom-select-sm form-control form-control-sm cursor-pointer w-auto">
@@ -97,7 +109,7 @@
                     </div>
                     <div class="table-responsive pb-2">
 
-                        <div class="d-none" data-el="assets.intro">
+                        <div class="{% if portfolio %}d-none{% endif %}" data-el="assets.intro">
                             <h4>Здесь пока нет инструментов</h4>
                             <div data-state="default"> 
                                 <p>Что бы добавить нажмите</p>
@@ -118,13 +130,13 @@
                             </div>
                         </div>
                        <table data-el="assets.container" width="100%" cellspacing="0">
-                            <thead>
+                            <thead class="{% if not portfolio %}d-none{% endif %}">
                                 <tr>
                                     <th class="pb-2">Инструмент</th>
                                     <th class="text-right">Сумма($)</th>
                                 </tr>
                             </thead>
-                            <tfoot>
+                            <tfoot class="{% if not portfolio %}d-none{% endif %}">
                                 <tr>
                                     <th class="pt-2">Инструмент</th>
                                     <th class="text-right">Сумма($)</th>
@@ -132,42 +144,44 @@
                             </tfoot>
                             <tbody data-el="container.body">
                                 
-                                {% for asset in portfolio.data_current %}
-                                    <tr data-el="assets.asset" class="add-bar-item bg-gray-100 border-left-warning">
-                                        <td class="w-50 add-bar-item__cell">
-                                            <span>
-                                                <span class="asset__name" data-el="asset.number">{{asset.number}}</span>.
-                                            </span>
-                                            <span class="d-none">
-                                                <span class="asset__name" data-el="asset.factoryNumber">{{asset.number}}</span>.
-                                            </span>
-                                            <span data-el="asset.name">{{asset.name}}</span>
-                                            <br>
-                                            (<span class="asset__name" data-el="asset.ticker">{{asset.ticker}}</span>)
-                                        </td>
+                                {% if portfolio %}
+                                    {% for asset in portfolio.data_current %}
+                                        <tr data-el="assets.asset" class="add-bar-item bg-gray-100 border-left-warning">
+                                            <td class="w-50 add-bar-item__cell">
+                                                <span>
+                                                    <span class="asset__name" data-el="asset.number">{{asset.number}}</span>.
+                                                </span>
+                                                <span class="d-none">
+                                                    <span class="asset__name" data-el="asset.factoryNumber">{{asset.number}}</span>.
+                                                </span>
+                                                <span data-el="asset.name">{{asset.name}}</span>
+                                                <br>
+                                                (<span class="asset__name" data-el="asset.ticker">{{asset.ticker}}</span>)
+                                            </td>
 
-                                        <td>
-                                            <div class="text-right" data-state="default">
-                                                    <div class="mr-4"><span class="asset__weight" data-el="asset.outPrice">{{asset.price}}</span>$</div>
-                                            </div> 
-                                            <input class="add-input text-right form-control ml-2 mr-2 float-right d-none" type="number" min="0" value="{{asset.price}}" data-el="asset.inPrice" data-state="edit">
-                                        </td>
+                                            <td>
+                                                <div class="text-right" data-state="default">
+                                                        <div class="mr-4"><span class="asset__weight" data-el="asset.outPrice">{{asset.price}}</span>$</div>
+                                                </div> 
+                                                <input class="add-input text-right form-control ml-2 mr-2 float-right d-none" type="number" min="0" value="{{asset.price}}" data-el="asset.inPrice" data-state="edit">
+                                            </td>
 
-                                        <td class="pr-4 text-right d-none" data-state="edit">
-                                            <div class="float-right">
-                                                <div class="d-flex align-items-center">
-                                                    <div data-state="edit" class="d-none">
-                                                        <span class="d-flex">
-                                                            <i class="fas fa-arrow-up cursor-pointer add-appear ml-2 blocked" data-el="asset.moveUp"></i>
-                                                            <i class="fas fa-arrow-down cursor-pointer add-appear ml-2" data-el="asset.moveDown"></i>
-                                                        </span>
+                                            <td class="pr-4 text-right d-none" data-state="edit">
+                                                <div class="float-right">
+                                                    <div class="d-flex align-items-center">
+                                                        <div data-state="edit" class="d-none">
+                                                            <span class="d-flex">
+                                                                <i class="fas fa-arrow-up cursor-pointer add-appear ml-2 blocked" data-el="asset.moveUp"></i>
+                                                                <i class="fas fa-arrow-down cursor-pointer add-appear ml-2" data-el="asset.moveDown"></i>
+                                                            </span>
+                                                        </div>
+                                                        <input class="add-checkbox align-middle d-none" type="checkbox" data-el="asset.checkbox" data-state="edit">
                                                     </div>
-                                                    <input class="add-checkbox align-middle d-none" type="checkbox" data-el="asset.checkbox" data-state="edit">
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
 
                                <!-- [Assets'll be there] -->
 
@@ -202,7 +216,7 @@
             <div class="card shadow mb-4" data-el="optimize">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Оптимизация</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Оптимизация</h6> 
                     <div class="text-right">
                         <i 
             title="
@@ -210,17 +224,23 @@
 в каком временном промежутке 
 происходила оптимизация" class="fas fa-info-circle text-gray-400"></i>
                         <span data-el="optimize.from">
-                            {% if portfolio.data_optimized["current"].get("from") %}
-                                {{ portfolio.data_optimized["current"].get("from")|ctime}}
+                            {% if portfolio %}
+                                {% if portfolio.data_optimized["current"].get("from") %}
+                                    {{ portfolio.data_optimized["current"].get("from")|ctime}}
+                                {% endif %}
                             {% endif %}
                         </span><br>
-                        <span data-el="optimize.last">{{ portfolio.optimize_timestamp|ctime}}</span>
+                        <span data-el="optimize.last">
+                        {% if portfolio %}
+                            {{ portfolio.optimize_timestamp|ctime}}
+                        {% endif %}
+                        </span>
                     </div>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
                     
-                    <div class="d-none" data-state="nothing">
+                    <div class="{% if portfolio %}d-none{% endif %}" data-state="nothing">
                         <h4 class='text-center'>
                             <br>
                             <!-- <i class="fas fa-flag-checkered"></i> -->
@@ -233,7 +253,7 @@
                             <p></p>
                         </h4>
                     </div>
-                    <div data-state="default" class="mb-4 d-none">
+                    <div data-state="default" class="mb-4 {% if not portfolio %}d-none{% endif %}">
                         <p class="font-weight-bold">
                             Ваше портфолио имеет:
                         </p>
@@ -246,7 +266,10 @@
                                         <span class="font-weight-bold">Волатильность</span>
                                     </td>
                                     <td class="text-right">
-                                        <span data-el="optimize.currentVolatility">{{(portfolio.data_optimized["current"].get("volatility")*100)|round(2)}}</span>%
+                                        <span data-el="optimize.currentVolatility">
+                                        {% if portfolio %}
+                                            {{(portfolio.data_optimized["current"].get("volatility")*100)|round(2)}}</span>%
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 <tr>
@@ -254,7 +277,11 @@
                                         <span class="font-weight-bold">Ожидаемый доход</span>
                                     </td>
                                     <td class="text-right">
-                                        <span data-el="optimize.currentReturn">{{(portfolio.data_optimized["current"].get("return")*100)|round(2)}}</span>%
+                                        <span data-el="optimize.currentReturn">
+                                            {% if portfolio %}
+                                                {{(portfolio.data_optimized["current"].get("return")*100)|round(2)}}
+                                            {% endif %}
+                                        </span>%
                                     </td>
                                 </tr>
 
@@ -279,15 +306,17 @@
                                     </tr>
                                 </tfoot>
                                 <tbody data-el="table.body">
+                                    {% if portfolio %}
 
-                                    {% for asset in portfolio.data_optimized["optimized"]["weights"] %}
-                                        <tr data-el="undefined">
-                                            <td>{{asset}}</td>
-                                            <td>{{portfolio.data_optimized["optimized"]["weights"][asset]}}</td>
-                                        </tr>
-                                    {% endfor %}
-                                    <!-- [ Add table row here ] -->
+                                        {% for asset in portfolio.data_optimized["optimized"]["weights"] %}
+                                            <tr data-el="undefined">
+                                                <td>{{asset}}</td>
+                                                <td>{{portfolio.data_optimized["optimized"]["weights"][asset]}}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        <!-- [ Add table row here ] -->
 
+                                    {% endif %}
                                 </tbody>
                             </table>
                         </div>
@@ -300,7 +329,11 @@
                                         <span class="font-weight-bold">Волатильность</span>
                                     </td>
                                     <td class="text-right">
-                                        <span data-el="optimize.optimizedVolatility">{{(portfolio.data_optimized["optimized"].get("volatility")*100)|round(2)}}</span>%
+                                        <span data-el="optimize.optimizedVolatility">
+                                            {% if portfolio %}
+                                                {{(portfolio.data_optimized["optimized"].get("volatility")*100)|round(2)}}
+                                            {% endif %}
+                                        </span>%
                                     </td>
                                 </tr>
                                 <tr>
@@ -308,7 +341,11 @@
                                         <span class="font-weight-bold">Ожидаемый доход</span>
                                     </td>
                                     <td class="text-right">
-                                        <span data-el="optimize.optimizedReturn">{{(portfolio.data_optimized["optimized"].get("return")*100)|round(2)}}</span>%
+                                        <span data-el="optimize.optimizedReturn">
+                                            {% if portfolio %}
+                                            {{(portfolio.data_optimized["optimized"].get("return")*100)|round(2)}}
+                                            {% endif %}
+                                        </span>%
                                     </td>
                                 </tr>
 
@@ -319,7 +356,7 @@
                         <span>
                             Порог весов (мин):
                         </span>
-                        <input type="number" max="0.1" min="0.01" value="{{portfolio.data_optimized['edge']}}" placeholder="мин. вес" class="add-input d-block w-25 mb-2 p-1" data-el="optimize.edge">
+                        <input type="number" max="0.1" min="0.01" value="{% if portfolio %}{{portfolio.data_optimized['edge']}}{% else %}0.01{% endif %}" placeholder="мин. вес" class="add-input d-block w-25 mb-2 p-1" data-el="optimize.edge">
                     </div>
                     <div class="d-none mb-2" data-el="optimize.alert">
                         <div class="add-alert">
@@ -347,6 +384,18 @@
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('static',filename='/js/min/port-templates.js') }}"></script>
-<script type="module" src="{{ url_for('static',filename='/js/min/single-port.js') }}"></script>
+{% if portfolio %}
+    {% if debug %}
+    <script type="module" src="{{ url_for('static',filename='/js/min/single-port.js') }}"></script>
+    {% else %}
+    <script type="module" src="{{ url_for('static',filename='/js/process/single-port.js') }}"></script>
+    {% endif %}
+{% else %}
+    {% if debug %}
+    <script type="module" src="{{ url_for('static',filename='/js/min/new-port.js') }}"></script>
+    {% else %}
+    <script type="module" src="{{ url_for('static',filename='/js/process/new-port.js') }}"></script>
+    {% endif %}
+{% endif %}
 {% endblock %}
                     

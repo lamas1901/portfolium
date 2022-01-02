@@ -1,5 +1,6 @@
 # My Specials
 
+node_modules/
 config.ini
 
 # Byte-compiled / optimized / DLL files
