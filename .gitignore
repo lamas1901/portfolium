@@ -4,6 +4,9 @@ process/
 scss/
 node_modules/
 config.ini
+gulpfile.js
+package-lock.json
+package.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
