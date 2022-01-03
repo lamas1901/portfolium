@@ -45,8 +45,8 @@ def search(pattern:str):
 # EX: info?ticker=btc-usd
 @app.get("/tickers/{ticker}")
 def info(ticker:str):
-	response = tickers.find(ticker)
+	response = tickers.get(ticker)
 	return {
-		"ticker":response.keys()[0],
-		"name":response[0]
+		"ticker":list(response.keys())[0],
+		"name":response[list(response.keys())[0]]
 	}

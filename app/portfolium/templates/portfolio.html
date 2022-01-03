@@ -386,15 +386,15 @@
 <script src="{{ url_for('static',filename='/js/min/port-templates.js') }}"></script>
 {% if portfolio %}
     {% if debug %}
-    <script type="module" src="{{ url_for('static',filename='/js/min/single-port.js') }}"></script>
-    {% else %}
     <script type="module" src="{{ url_for('static',filename='/js/process/single-port.js') }}"></script>
+    {% else %}
+    <script type="module" src="{{ url_for('static',filename='/js/min/single-port.js') }}"></script>
     {% endif %}
 {% else %}
     {% if debug %}
-    <script type="module" src="{{ url_for('static',filename='/js/min/new-port.js') }}"></script>
-    {% else %}
     <script type="module" src="{{ url_for('static',filename='/js/process/new-port.js') }}"></script>
+    {% else %}
+    <script type="module" src="{{ url_for('static',filename='/js/min/new-port.js') }}"></script>
     {% endif %}
 {% endif %}
 {% endblock %}

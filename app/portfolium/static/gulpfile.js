@@ -6,7 +6,7 @@ const browsersync = require("browser-sync").create();
 const cleanCSS = require("gulp-clean-css");
 const plumber = require("gulp-plumber");
 const rename = require("gulp-rename");
-const sass = require("gulp-sass");
+const sass = require("gulp-sass")(require("sass"));
 const uglify = require("gulp-uglify");
 
 function css() {
@@ -15,8 +15,7 @@ function css() {
     .pipe(plumber())
     .pipe(sass({
       outputStyle: "expanded"
-    }))
-    .on("error", sass.logError)
+    }).on("error", sass.logError))
     .pipe(autoprefixer({
       cascade: false
     }))
@@ -32,7 +31,7 @@ function css() {
 function js() {
   return gulp
     .src([
-      './js/process/*.js',
+      './js/process/**/*.js',
       '!./js/process/fetch.js'
     ])
     .pipe(uglify())
@@ -41,8 +40,8 @@ function js() {
 }
 
 function watchFiles() {
-  gulp.watch("./scss/**/*", css);
-  gulp.watch(["./js/process/*"], js);
+  gulp.watch(["./scss/**/*"], css);
+  gulp.watch(["./js/process/**/*"], js);
 }
 
 exports.css = css;

@@ -23,6 +23,7 @@ def create_portfolio(tickers,weights):
 def get_brief(tickers):
 	cury = int(datetime.date.today().strftime("%Y"))
 	start = datetime.datetime(cury-1,1,1)
+	tickers_invalid = []
 
 	data = []
 
@@ -37,6 +38,7 @@ def get_brief(tickers):
 				ticker_data
 			)
 		else:
+			tickers_invalid.append(ticker)
 			tickers.remove(ticker)
 	data = pd.concat(data,axis=1).dropna()
 	date_from = data.index[0].timestamp()
@@ -51,7 +53,7 @@ def get_brief(tickers):
 		"meanLogRet":meanLogRet,
 		"sigma":sigma,
 		"from": date_from,
-		"tickers" : tickers
+		"tickers_invalid" : tickers_invalid 
 	}
 
 def get_expectations(portfolio,brief):
@@ -111,9 +113,11 @@ def optimize(tickers,edge):
 def analyze(portfolio,edge=0.01):
 	tickers = [ticker for ticker in portfolio]
 	brief = get_brief(tickers)
-	for ticker in portfolio:
-		if not (ticker in brief["tickers"]):
-			del portfolio[ticker]
+	for ticker in brief["tickers_invalid"]:
+		try:
+			portfolio.pop(ticker)
+		except:
+			pass
 	return {
 		"current":get_expectations(
 			portfolio,

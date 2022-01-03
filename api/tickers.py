@@ -7,11 +7,8 @@ import numpy as np
 class Tickers():
 
 	def __init__(self,path):
-		self.all = pd.read_csv(path)
-		self.all.columns = ["index","ticker","name","exchange","type","country"]
-		# old
-		# self.all.columns = ["ticker","name","exchange","type","country"]		
-		# self.all = self.all.set_index("ticker")
+		self.all = pd.read_csv(path)[["ticker","name"]]
+		self.all.columns = ["ticker","name"]
 
 	def add_ticker(self,ticker,data:dict):
 		to_add = pd.DataFrame(data,index=[ticker])
@@ -19,19 +16,30 @@ class Tickers():
 
 	def find(self,pattern):
 		df = self.all
-		return df[
+		result = df[
 			["ticker","name"]
 		][df['ticker'].str.contains(
 			pattern, case=False
 		) | df['name'].str.contains(
-			pattern,case=False)].set_index("ticker").head(5)["name"].replace(np.nan,"")
+			pattern,case=False)].set_index("ticker").head(5).replace(np.nan,"").to_dict()
+		exist = df.set_index("ticker").filter(
+			regex=f"^{pattern.upper()}$",
+			axis=0
+		).shape[0]
 
-		# old		 
-		# return self.all.filter(
+		result["tickers"] = result.pop("name")
 
-		# 	regex=f"^{pattern.upper()}",
-		# 	axis=0
-		# )["name"].sort_index().replace(np.nan,"")[:5]
+		result["right_ticker"] = bool(exist)
+
+		return result
+
+	def get(self,ticker):
+		result = self.all.set_index("ticker").filter(
+			regex=f"^{ticker.upper()}$",
+			axis=0
+		).to_dict()
+		result["ticker"] = result.pop("name")
+		return result["ticker"]
 
 	def save(self,filename):
 		self.all.to_csv(filename)
@@ -44,4 +52,4 @@ if __name__=="__main__":
 	
 	while True:
 		pattern = input("Введи паттерн:")
-		print(tickers.find(pattern).to_dict())
+		print(tickers.find(pattern))

@@ -297,7 +297,6 @@ class StaticTable extends StaticComponent{
 	}
 	
 	render(){
-		console.log(this.body.subscribers.length)
 		this.heads.forEach((head)=>{
 			if(head.dataset.state===this.root.state.mode&&this.body.subscribers.length>0){
 				head.classList[
@@ -419,7 +418,7 @@ class SearchBar extends StaticComponent{
 
 		this.addChild(Button,"selectButton").take = (message)=>{
 			let op
-			if (message[0]?.[0]?.toLowerCase()===this.input.value){
+			if (message[0]?.[0]?.toLowerCase()===this.input.value | this.results.right_ticker){
 				op = "remove"
 			} else {
 				op = "add"
@@ -442,10 +441,11 @@ class SearchBar extends StaticComponent{
 	}
 
 	async select(){
-		if(this.results.lastResult===this.input.value){
-			fetch(`${this.state.api}/tickers/${this.results.lastResult.toUpperCase()}`).then((response)=>{
+		if(this.results.lastResult===this.input.value | this.results.right_ticker){
+			fetch(`${this.state.api}/tickers/${this.input.value.toUpperCase()}`).then((response)=>{
 				return response.json()
 			}).then((data)=>{
+				console.log(data)
 				this.root.container.addAsset({
 					ticker:data.ticker,
 					name:data.name
@@ -544,8 +544,9 @@ class InputResults extends Edge{
 	async fetchResults(adress,filterFunc){
 		this.clear()
 		this.request(adress).then((response)=>{
+			this.right_ticker = response["right_ticker"]
 			this.set(
-				response
+				response["tickers"]
 			)
 		})
 	}
