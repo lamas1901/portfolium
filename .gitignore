@@ -1,6 +1,7 @@
 # My Specials
 
 process/
+scss/
 node_modules/
 config.ini
 

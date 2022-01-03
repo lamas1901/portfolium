@@ -1,1 +1,0 @@
-export const TO_FETCH ="http://localhost:8000";
