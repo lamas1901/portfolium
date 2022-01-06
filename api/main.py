@@ -31,6 +31,7 @@ def analyze(t:str,w:str,edge:float):
 	for index,ticker in enumerate(t.split(",")):
 		portfolio[ticker]=float(weights[index])
 	response = yf.analyze(portfolio,edge)
+	print(response)
 	return response
 
 # EX: search?ticker=btc

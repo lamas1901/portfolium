@@ -2,6 +2,7 @@ import yfinance as yf
 import datetime
 import pandas as pd
 import numpy as np
+import copy
 
 from pprint import pprint
 
@@ -21,12 +22,12 @@ def create_portfolio(tickers,weights):
 		return False
 
 def get_brief(tickers):
+	columns = copy.deepcopy(tickers)
 	cury = int(datetime.date.today().strftime("%Y"))
 	start = datetime.datetime(cury-1,1,1)
 	tickers_invalid = []
 
 	data = []
-
 	for ticker in tickers:
 		ticker_data = yf.download(
 			ticker,
@@ -39,10 +40,10 @@ def get_brief(tickers):
 			)
 		else:
 			tickers_invalid.append(ticker)
-			tickers.remove(ticker)
+			columns.remove(ticker)
 	data = pd.concat(data,axis=1).dropna()
 	date_from = data.index[0].timestamp()
-	data.columns = tickers
+	data.columns = columns
 
 	logReturns = np.log(data/data.shift(1))
 
@@ -53,12 +54,13 @@ def get_brief(tickers):
 		"meanLogRet":meanLogRet,
 		"sigma":sigma,
 		"from": date_from,
-		"tickers_invalid" : tickers_invalid 
+		"tickers_invalid" : tickers_invalid, 
+		"tickers" : columns
 	}
 
 def get_expectations(portfolio,brief):
 
-	w = np.array([portfolio[i] for i in portfolio])
+	w = np.array([portfolio[i] for i in brief["tickers"]])
 
 	expectedReturn = np.sum(brief["meanLogRet"]*w)
 	expectedVolatility = np.sqrt(np.dot(w.T,np.dot(brief["sigma"],w)))
@@ -111,8 +113,8 @@ def optimize(tickers,edge):
 
 
 def analyze(portfolio,edge=0.01):
-	tickers = [ticker for ticker in portfolio]
-	brief = get_brief(tickers)
+	brief = get_brief([ticker for ticker in portfolio])
+	tickers = [ticker for ticker in brief["tickers"]]
 	for ticker in brief["tickers_invalid"]:
 		try:
 			portfolio.pop(ticker)
