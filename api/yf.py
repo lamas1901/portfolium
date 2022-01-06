@@ -1,5 +1,5 @@
 import yfinance as yf
-import datetime
+from datetime import datetime
 import pandas as pd
 import numpy as np
 import copy
@@ -23,15 +23,13 @@ def create_portfolio(tickers,weights):
 
 def get_brief(tickers):
 	columns = copy.deepcopy(tickers)
-	cury = int(datetime.date.today().strftime("%Y"))
-	start = datetime.datetime(cury-1,1,1)
 	tickers_invalid = []
 
 	data = []
 	for ticker in tickers:
 		ticker_data = yf.download(
 			ticker,
-			interval="1d",
+			interval="1mo",
 			progress=False
 		)["Close"]
 		if ticker_data.shape[0]>0:
@@ -64,9 +62,11 @@ def get_expectations(portfolio,brief):
 
 	expectedReturn = np.sum(brief["meanLogRet"]*w)
 	expectedVolatility = np.sqrt(np.dot(w.T,np.dot(brief["sigma"],w)))
+
+	year_count = datetime.today().year-datetime.fromtimestamp(brief["from"]).year
 	return {
-		"volatility":round(expectedVolatility,4),
-		"return":round(expectedReturn*100,4),
+		"volatility":round(expectedVolatility/year_count,4),
+		"return":round(expectedReturn/year_count*100,4),
 		"from":brief["from"]
 	}
 
